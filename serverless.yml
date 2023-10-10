@@ -1,0 +1,53 @@
+service: thumb-generator
+
+frameworkVersion: '3'
+
+plugins:
+  - serverless-python-requirements
+  - serverless-iam-roles-per-function
+  - serverless-export-outputs
+
+provider:
+  versionFunctions: false
+  name: aws
+  runtime: python3.9
+  region: us-east-1
+  timeout: 10
+  memorySize: 256
+  architecture: arm64
+
+package:
+  individually: true
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+
+functions:
+  thumb_generator:
+    environment:
+      SEND_THUMBS_BUCKET: !Ref thumbsGeradas
+    handler: handler.s3_thumbnail_generator
+    module: src
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "s3:*" # Especificar acoes
+        Resource: "*" # Especificar recurso
+    events:
+      - s3:
+          bucket: ${self:service}-thumb-gen-${sls:stage}
+          event: s3:ObjectCreated:*
+
+resources:
+  Resources:
+    thumbsGeradas:
+      Type: 'AWS::S3::Bucket'
+      Properties:
+        BucketName: ${self:service}-thumbs-geradas-${sls:stage}
+
+  Outputs:
+    thumbsGeradas:
+      Value: !Ref thumbsGeradas
+    thumbsGen:
+      Value: ${self:service}-thumb-gen-${sls:stage}

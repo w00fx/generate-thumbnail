@@ -1,0 +1,19 @@
+{
+  "name": "gerador-thumb",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "source venv/bin/activate && pytest -s src/",
+    "unit-test": "source venv/bin/activate && pytest -s src/unit_tests/",
+    "integration-test": "source venv/bin/activate && pytest -s src/integration_tests/"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "serverless": "^3.34.0",
+    "serverless-export-env": "github:arabold/serverless-export-env",
+    "serverless-export-outputs": "^1.0.2",
+    "serverless-iam-roles-per-function": "^3.2.0",
+    "serverless-python-requirements": "^6.0.0"
+  }
+}
